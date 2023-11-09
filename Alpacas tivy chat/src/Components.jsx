@@ -1,6 +1,12 @@
 export function Title() {
   return (
-    <div className='p-3 text-white text-2xl text-center bg-main'>
+    <div
+      className='
+      p-3
+    text-white 
+      text-2xl 
+    bg-main'
+    >
       Alpacas Chat
     </div>
   );
@@ -11,48 +17,71 @@ export function InputsArea({ sendMessage, setNewText, setNewImg }) {
     sendMessage();
     e.target.value = '';
     setNewText('');
-    setNewImg('')
+    setNewImg('');
   }
 
   return (
     <div
       className='
-    absolute inset-x-0 bottom-0  
-    flex justify-center 
-    p-3 bg-main'
+    absolute inset-x-0 bottom-0 
+
+    flex  justify-center 
+    
+    p-3
+
+    bg-main
+
+    '
     >
-      <input
-        type='text'
-        autoFocus
-        className=' m-1 p-2 rounded-full w-2/5 '
-        onChange={(e) => setNewText(e.target.value)}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            send(e);
-          }
-        }}
-      />
-      <label
-        className=' m-1 p-2 rounded-full  '
-        htmlFor='selectFile'
+      <div
+        style={{}}
+        className='
+        relative
+       
+        
+          w-6/12
+            '
       >
-        📂
-      </label>
-      <input
-        type='file'
-        onChange={(e) => {
-          if (e.target.files[0].size < 1050974) {
-            setNewImg(e.target.files[0]);
-          } else {
-            alert(
-              ' Maximo de 1MB\n Olha o tamanho disso ta querendo fude a database?? \n'
-            );
-          }
-        }}
-        style={{ display: 'none' }}
-        id='selectFile'
-        accept='.jpg, .jpeg, .png'
-      />
+        <input
+          className='
+            p-2 w-full
+            rounded-full border-none
+            '
+          type='text'
+          autoFocus
+          onChange={(e) => setNewText(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              send(e);
+            }
+          }}
+        />
+        <label
+          className='
+          p-2 
+          bg-sky-600 rounded-r-xl 
+           absolute bottom-0 right-0
+           '
+          htmlFor='selectFile'
+        >
+          📂
+        </label>
+        <input
+          type='file'
+          onChange={(e) => {
+            if (e.target.files[0].size < 1050974) {
+              setNewImg(e.target.files[0]);
+            } else {
+              alert(
+                ' Maximo de 1MB\n Olha o tamanho disso ta querendo fude a database?? \n'
+              );
+            }
+          }}
+          style={{ display: 'none' }}
+          id='selectFile'
+          accept='.jpg, .jpeg, .png'
+        />
+      </div>
     </div>
   );
 }
@@ -98,7 +127,7 @@ function Post({ user, text, img }) {
       </p>
 
       {img != '' ? (
-        <img 
+        <img
           onError={(err) => (err.target.style.display = 'none')}
           className='max-w-sm rounded-xl'
           src={img}
