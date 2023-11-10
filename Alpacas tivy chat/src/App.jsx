@@ -3,7 +3,7 @@ import { getMessages, addMessage } from './firebase.jsx';
 import { InputsArea, MessagesArea, Title } from './Components.jsx';
 
 function App() {
-  // console.clear();
+  console.clear();
 
   const [messages, setMessages] = useState();
   const [user, setUser] = useState('');
