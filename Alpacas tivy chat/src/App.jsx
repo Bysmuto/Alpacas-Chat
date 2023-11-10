@@ -15,16 +15,9 @@ function App() {
     getMessages(setMessages);
   }, []);
 
-  // useEffect(() => {
-  //   console.log('text:'+newText)
-  // }, [newText]);
-  // useEffect(() => {
-  //   console.log('img:'+newImg)
-  // }, [newImg]);
-
 
   return (
-    <>
+    <div className='overflow-x-hidden'>
       <Title />
 
       <MessagesArea messages={messages} />
@@ -34,7 +27,7 @@ function App() {
         setNewImg={setNewImg}
         sendMessage={() => addMessage(user, newText, newImg)}
       />
-    </>
+    </div>
   );
 }
 
