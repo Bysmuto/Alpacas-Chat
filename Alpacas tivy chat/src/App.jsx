@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getMessages, addMessage,signInWithGoogle } from './firebase.jsx';
-import { InputsArea, MessagesArea, Title } from './Components.jsx';
-
+import { getMessages, addMessage, signInWithGoogle } from './firebase.jsx';
+import { InputsArea, MessagesArea, Title, LogInPage } from './Components.jsx';
 
 function App() {
   // console.clear();
@@ -14,24 +13,26 @@ function App() {
 
   useEffect(() => {
     getMessages(setMessages);
-    console.log(user)
   }, []);
 
-
   return (
-    <div className=''>
-    {/* <button onClick={signInWithGoogle}>google</button> */}
-      <Title />
+    <>
+      {user != null ? (
+        <>
+          <Title />
 
+          <MessagesArea messages={messages} />
 
-      <MessagesArea messages={messages} />
-
-      <InputsArea
-        setNewText={setNewText}
-        setNewImg={setNewImg}
-        sendMessage={() => addMessage(user, newText, newImg)}
-      />
-    </div>
+          <InputsArea
+            setNewText={setNewText}
+            setNewImg={setNewImg}
+            sendMessage={() => addMessage(user, newText, newImg)}
+          />
+        </>
+      ) : (
+        <LogInPage  />
+      )}
+    </>
   );
 }
 

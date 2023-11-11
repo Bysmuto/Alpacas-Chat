@@ -1,6 +1,5 @@
-import { useState } from 'react';
 import logo from './assets/logo2.png';
-
+import { signInWithGoogle } from './firebase.jsx';
 export function Title() {
   return (
     <div className='select-none flex justify-center p-3 text-white font-semibold text-2xl bg-main text-center'>
@@ -64,65 +63,89 @@ export function InputsArea({ sendMessage, setNewText, setNewImg }) {
 
 export function MessagesArea({ messages }) {
   return (
-    <div className='bg-slate-700 max-h-[80vh] overflow-y-auto overflow-x-hidden'>
+    <div className='bg-slate-700  max-h-[80vh]  min-h-[80vh] overflow-y-auto overflow-x-hidden'>
       {messages?.map((message) => (
         <Post
           key={message[0]}
+          id={message[0]}
           user={message[1].user}
           text={message[1].text}
           img={message[1].img}
+          userPic={message[1].userPic}
         />
       ))}
     </div>
   );
 }
 
-function Post({ user, text, img }) {
+function Post({ user, text, img, userPic, id }) {
   const words = text?.split(' ');
-  
 
 
   return (
     <>
-      {img != '' ? (
-        <img
-          loading='lazy'
-          className=' max-w-sm rounded-xl m-2 ml-12'
-          onError={(err) => (err.target.style.display = 'none')}
-          src={img}
-        ></img>
-      ) : null}
-      <div className='mt-10 text-white '>
+      <div className=' text-white mt-6 '>
+        {img != '' ? (
+          <img
+            loading='lazy'
+            className=' max-w-sm rounded-xl m-2 ml-12'
+            onError={(err) => (err.target.style.display = 'none')}
+            src={img}
+          ></img>
+        ) : null}
 
         <div className='flex ml-10'>
-          {typeof text !='undefined' ? 
-          <p className='bg-op rounded-tl-[20px]  rounded-r-[20px] ml-3  p-3 text-lg font-mono font-bold'>
-          {words?.map((word) => {
-            const URL_REGEX =
-              /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
-            return word.match(URL_REGEX) ? (
-              <>
-                <a
-                  href={word}
-                  target='_blank'
-                >
-                  {' '}
-                  <u>{new URL(word).hostname}</u>{' '}
-                </a>{' '}
-              </>
-            ) : (
-              word + ' '
-            );
-          })}
-        </p>
-          : null}
-          
+          {text != '' ? (
+            <p className='bg-op rounded-tl-[20px]  rounded-r-[20px] ml-3  p-3 text-lg font-mono font-bold'>
+              {words?.map((word) => {
+                const URL_REGEX =
+                  /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
+                return word.match(URL_REGEX) ? (
+                  <>
+                    <a
+                      href={word}
+                      target='_blank'
+                    >
+                      {' '}
+                      <u>{new URL(word).hostname}</u>{' '}
+                    </a>{' '}
+                  </>
+                ) : (
+                  word + ' '
+                );
+              })}
+            </p>
+          ) : null}
         </div>
 
         <div className='flex '>
-          <div className='bg-white h-10 w-10 rounded-full ml-3'></div>
+          <img
+            src={userPic}
+            className=' h-10 w-10 rounded-full ml-3'
+          />
           <div className=' m-2 select-text text-xs'>{user}</div>
         </div>
+      </div>
+    </>
+  );
+}
+
+export function LogInPage(google) {
+
+  return (
+    <>
+      <div className='bg-main min-h-[100vh] flex flex-col justify-center items-center'>
+        <h1 className='text-white text-3xl font-mono m-5 '> Alpacas Chat </h1>
+        <img
+          className='w-40  '
+          src={logo}
+        />
+        <button
+          className='bg-white rounded-full p-3 font-bold m-5'
+          onClick={signInWithGoogle}
+        >
+          Entrar com Google
+        </button>
       </div>
     </>
   );

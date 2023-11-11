@@ -4,6 +4,7 @@ import {
   getDatabase,
   ref,
   push,
+  set,
   onValue,
 } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-database.js';
 
@@ -18,6 +19,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signInAnonymously,
 } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js';
 
 const firebaseConfig = {
@@ -32,9 +34,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const storage = getStorage();
+const auth = getAuth(app);
+const provider = new GoogleAuthProvider();
 
 export async function getMessages(setPosts) {
-  onValue(ref(db, 'Posts'), (snap) => {
+  onValue(ref(db, 'Messages'), (snap) => {
     let res = snap.val();
     let data = Object.entries(res);
 
@@ -43,38 +47,46 @@ export async function getMessages(setPosts) {
 }
 
 export async function addMessage(user, text, img) {
-  let onlyText = text != '' && img === '';
-  let onlyImg = text === '' && img != '';
-  let both = text != '' && img != '';
+  let hasImg = img != '';
 
-  let refDb = ref(db, 'Posts');
+  let refDb = ref(db, 'Messages');
 
-  if (onlyText) {
-    push(refDb, { user: user, text: text, img: '' });
+  let message = {
+    user: user,
+    text: text,
+    userPic: localStorage.getItem('profilePic'),
+    uid: localStorage.getItem('uid'),
+  };
+
+  if (!hasImg) {
+    push(refDb, { ...message });
   } else {
     const storageRef = sRef(storage, `posts/${img?.name + Math.random()}`);
 
     let req = await uploadBytes(storageRef, img);
     let imgUrl = await getDownloadURL(storageRef);
-
-    if (onlyImg) {
-      push(refDb, { user: user, text: '', img: imgUrl });
-    } else if (both) {
-      push(refDb, { user: user, text: text, img: imgUrl });
-    }
+    push(refDb, {
+      ...message,
+      img: imgUrl,
+    });
   }
 }
-export const auth = getAuth(app);
-
-const provider = new GoogleAuthProvider();
 
 export const signInWithGoogle = () => {
   signInWithPopup(auth, provider).then((result) => {
     const user = result.user.displayName;
-    const email = result.user.email;
     const profilePic = result.user.photoURL;
-    console.log(result);
-    localStorage.setItem("user", user);
-    localStorage.setItem("profilePic", profilePic);
+    const uid = result.user.providerData[0].uid;
+
+    localStorage.setItem('user', user);
+    localStorage.setItem('uid', uid);
+    localStorage.setItem('profilePic', profilePic);
+
+    set(ref(db, 'Users/' + user + '_' + uid), {
+      user: user,
+      profilePic: profilePic,
+      uid: uid,
+    });
+    window.location.reload();
   });
 };
