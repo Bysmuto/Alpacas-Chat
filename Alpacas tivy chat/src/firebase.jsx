@@ -14,6 +14,12 @@ import {
   uploadBytes,
 } from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-storage.js';
 
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+} from 'https://www.gstatic.com/firebasejs/10.5.2/firebase-auth.js';
+
 const firebaseConfig = {
   apiKey: 'AIzaSyD2DdUnvQvxRUrCT7qbLfh88-QJl_kSBVQ',
   authDomain: 'alpacas-tivy-chat.firebaseapp.com',
@@ -58,3 +64,17 @@ export async function addMessage(user, text, img) {
     }
   }
 }
+export const auth = getAuth(app);
+
+const provider = new GoogleAuthProvider();
+
+export const signInWithGoogle = () => {
+  signInWithPopup(auth, provider).then((result) => {
+    const user = result.user.displayName;
+    const email = result.user.email;
+    const profilePic = result.user.photoURL;
+    console.log(result);
+    localStorage.setItem("user", user);
+    localStorage.setItem("profilePic", profilePic);
+  });
+};

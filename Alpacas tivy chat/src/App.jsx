@@ -1,24 +1,28 @@
 import { useEffect, useState } from 'react';
-import { getMessages, addMessage } from './firebase.jsx';
+import { getMessages, addMessage,signInWithGoogle } from './firebase.jsx';
 import { InputsArea, MessagesArea, Title } from './Components.jsx';
 
+
 function App() {
-  console.clear();
+  // console.clear();
 
   const [messages, setMessages] = useState();
-  const [user, setUser] = useState('');
 
-  const [newText, setNewText] = useState('');
-  const [newImg, setNewImg] = useState('');
+  const [user, setUser] = useState(localStorage.getItem('user'));
+  const [newText, setNewText] = useState(null);
+  const [newImg, setNewImg] = useState(null);
 
   useEffect(() => {
     getMessages(setMessages);
+    console.log(user)
   }, []);
 
 
   return (
-    <div className='overflow-x-hidden'>
+    <div className=''>
+    {/* <button onClick={signInWithGoogle}>google</button> */}
       <Title />
+
 
       <MessagesArea messages={messages} />
 
