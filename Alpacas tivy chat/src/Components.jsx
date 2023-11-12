@@ -1,5 +1,7 @@
+import { useRef } from 'react';
 import logo from './assets/logo2.png';
 import { signInWithGoogle } from './firebase.jsx';
+
 export function Title() {
   return (
     <div className='select-none flex justify-center p-3 text-white font-semibold text-2xl bg-main text-center'>
@@ -13,9 +15,12 @@ export function Title() {
 }
 
 export function InputsArea({ sendMessage, setNewText, setNewImg }) {
-  function send(e) {
+  const inp = useRef();
+
+  function send() {
     sendMessage();
-    e.target.value = '';
+
+    inp.current.value = '';
     setNewText('');
     setNewImg('');
   }
@@ -24,18 +29,25 @@ export function InputsArea({ sendMessage, setNewText, setNewImg }) {
     <div className='pt-3 select-none  absolute inset-x-0 bottom-0 flex  justify-center  bg-main'>
       <div className=' relative w-[80%]'>
         <input
+          ref={inp}
           className=' p-2 w-full rounded-full focus:outline-none  '
           type='text'
           autoFocus
           onChange={(e) => setNewText(e.target.value)}
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
-              send(e);
+              send();
             }
           }}
         />
-        <label
+        <button
           className='p-2 absolute right-0 top-0  rounded-r-full  '
+          onClick={send}
+        >
+          ✔
+        </button>
+        <label
+          className='p-2 absolute  top-0  rounded-r-full  '
           htmlFor='selectFile'
         >
           📂
@@ -81,22 +93,21 @@ export function MessagesArea({ messages }) {
 function Post({ user, text, img, userPic, id }) {
   const words = text?.split(' ');
 
-
   return (
     <>
       <div className=' text-white mt-6 '>
         {img != '' ? (
           <img
             loading='lazy'
-            className=' max-w-sm rounded-xl m-2 ml-12'
+            className='  max-w-sm rounded-xl m-2 ml-12 max-sm:max-w-[80vw]'
             onError={(err) => (err.target.style.display = 'none')}
             src={img}
           ></img>
         ) : null}
 
-        <div className='flex ml-10'>
+        <div className='flex ml-10 '>
           {text != '' ? (
-            <p className='bg-op rounded-tl-[20px]  rounded-r-[20px] ml-3  p-3 text-lg font-mono font-bold'>
+            <p className='bg-op rounded-tl-[20px]  rounded-r-[20px] ml-3  p-3 text-lg font-mono break-words max-w-[80vw]'>
               {words?.map((word) => {
                 const URL_REGEX =
                   /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
@@ -131,7 +142,6 @@ function Post({ user, text, img, userPic, id }) {
 }
 
 export function LogInPage(google) {
-
   return (
     <>
       <div className='bg-main min-h-[100vh] flex flex-col justify-center items-center'>

@@ -15,6 +15,12 @@ function App() {
     getMessages(setMessages);
   }, []);
 
+  useEffect(() => {
+    console.log(newText)
+  }, [newText]);
+
+
+
   return (
     <>
       {user != null ? (
@@ -28,9 +34,10 @@ function App() {
             setNewImg={setNewImg}
             sendMessage={() => addMessage(user, newText, newImg)}
           />
+
         </>
       ) : (
-        <LogInPage  />
+        <LogInPage />
       )}
     </>
   );
